@@ -1,7 +1,12 @@
 from Board import Board
+from RedGhost import RedGhost
+from BlueGhost import BlueGhost
+from PinkGhost import PinkGhost
+from YellowGhost import YellowGhost
+from Pacman import Pacman
 board = Board()
-board.new_level()
-for i in range(board.row):
-    for j in range(board.column):
-        print(board.board[i][j], end='')
-    print()
+red_ghost = RedGhost()
+blue_ghost = BlueGhost()
+pink_ghost = PinkGhost()
+board.NewLevel()
+

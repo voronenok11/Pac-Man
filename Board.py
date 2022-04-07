@@ -5,7 +5,7 @@ class Board:
     time_of_game = 0
     row = 31
     column = 28
-    def fill(self):
+    def Fill(self):
         self.board = []
         for i in range(self.row):
             self.board.append([])
@@ -168,11 +168,12 @@ class Board:
         #row 30
         for i in range(self.column):
             self.board[30][i] = '#'
-    def new_level(self):
-        self.fill()
+    def NewLevel(self):
+        self.Fill()
         self.level += 1
         self.number_of_dots = 0
         for i in range(self.row):
             for j in range(self.column):
                 if self.board[i][j] == '*':
                     self.number_of_dots += 1
+
