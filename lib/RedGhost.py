@@ -6,4 +6,5 @@ class RedGhost:
         pass
     def Move(self, board, pacman):
         self.ChangeTactic(board, pacman)
+
             
