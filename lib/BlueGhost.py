@@ -2,7 +2,7 @@ class BlueGhost:
     position = [14, 11]
     orientation = [0, 0]
     time_of_dead = 0
-    def ChangeTactic(self, board, pacman):
+    def ChangeTactic(self, board, pacman, red_ghost):
         if self.time_of_dead < 50:
             return
         dist = []
@@ -53,12 +53,41 @@ class BlueGhost:
             else:
                 self.orientation = prev[px][py]
         else:
-            self.orientation = [0, 0]
+            vx = pacman.position[0] + 2 * pacman.orientation[0] - red_ghost.position[0]
+            vy = pacman.position[1] + 2 * pacman.orientation[1] - red_ghost.position[1]
+            px = red_ghost.position[0] + 2 * vx
+            py = red_ghost.position[1] + 2 * vy
+            while px < 0 or py < 0 or px >= board.row or py >= board.column or board.board[px][py] == '#':
+                px -= vx
+                py -= vy
+            if dist[px][py] == inf:
+                for delta in neigh:
+                    if board.board[self.position[0] + delta[0]][self.position[1] + delta[1]] != '#' and delta != [-self.orientation[0], -self.orientation[1]]:
+                        self.orientation = delta
+                        break
+
+            elif dist[px][py] == 0:
+                for delta in neigh:
+                    if board.board[self.position[0] + delta[0]][self.position[1] + delta[1]] != '#' and delta != [-self.orientation[0], -self.orientation[1]]:
+                        self.orientation = delta
+                        break
+            else:
+                while dist[px][py] > 1:
+                    px, py = px - prev[px][py][0], py - prev[px][py][1]
+                if prev[px][py] == [-self.orientation[0], -self.orientation[1]]:
+                    for delta in neigh:
+                        if board.board[self.position[0] + delta[0]][self.position[1] + delta[1]] != '#' and delta != [-self.orientation[0], -self.orientation[1]]:
+                            self.orientation = delta
+                            break
+                else:
+                    self.orientation = prev[px][py]
+
+
 
             
         
-    def Move(self, board, pacman):
-        self.ChangeTactic(board, pacman)
+    def Move(self, board, pacman, red_ghost):
+        self.ChangeTactic(board, pacman, red_ghost)
         self.position[0] += self.orientation[0]
         self.position[1] += self.orientation[1]
         if self.position == pacman.position:

@@ -27,6 +27,7 @@ def NewLevel():
     board.level += 1
     board.number_of_dots = 0
     blue_ghost.time_of_dead = 0
+    yellow_ghost.time_of_dead = 0
     for i in range(board.row):
         for j in range(board.column):
             if board.board[i][j] == '*':
@@ -93,7 +94,7 @@ while True:
         was_caught = True
     if red_ghost.Move(board, pacman):
         was_caught = True
-    if blue_ghost.Move(board, pacman):
+    if blue_ghost.Move(board, pacman, red_ghost):
         was_caught = True
     if pink_ghost.Move(board, pacman):
         was_caught = True
@@ -108,6 +109,7 @@ while True:
         NewLevel()
     board.time_of_game += 1
     blue_ghost.time_of_dead += 1
+    yellow_ghost.time_of_dead += 1
     pygame.display.flip()
     clock.tick(3)
 
