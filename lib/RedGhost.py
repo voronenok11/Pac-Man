@@ -26,15 +26,29 @@ class RedGhost:
                     continue
                 if board.board[nvx][nvy] == '#':
                     continue
+                if [nvx, nvy] == [14, 5] or [nvx, nvy] == [14, 22]:
+                    continue
                 if dist[nvx][nvy] == inf:
                     dist[nvx][nvy] = dist[vx][vy] + 1
                     prev[nvx][nvy] = delta
                     que.append([nvx, nvy])
         px = pacman.position[0]
         py = pacman.position[1]
-        while dist[px][py] > 1:
-            px, py = px - prev[px][py][0], py - prev[px][py][1]
-        self.orientation = prev[px][py]
+        if dist[px][py] == inf:
+            for delta in neigh:
+                if board.board[self.position[0] + delta[0]][self.position[1] + delta[1]] != '#' and delta != [-self.orientation[0], -self.orientation[1]]:
+                    self.orientation = delta
+                    break
+        else:
+            while dist[px][py] > 1:
+                px, py = px - prev[px][py][0], py - prev[px][py][1]
+            if prev[px][py] == [-self.orientation[0], -self.orientation[1]]:
+                for delta in neigh:
+                    if board.board[self.position[0] + delta[0]][self.position[1] + delta[1]] != '#' and delta != [-self.orientation[0], -self.orientation[1]]:
+                        self.orientation = delta
+                        break
+            else:
+                self.orientation = prev[px][py]
     def Move(self, board, pacman):
         self.ChangeTactic(board, pacman)
         self.position[0] += self.orientation[0]

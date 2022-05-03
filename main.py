@@ -26,6 +26,7 @@ def NewLevel():
     board.Fill()
     board.level += 1
     board.number_of_dots = 0
+    blue_ghost.time_of_dead = 0
     for i in range(board.row):
         for j in range(board.column):
             if board.board[i][j] == '*':
@@ -43,6 +44,7 @@ def NewLevel():
     yellow_ghost.orientation = [0, 0]
 def ResetLevel():
     pacman.health -= 1
+    blue_ghost.time_of_dead = 0
     pacman.position = [23, 13]
     pacman.orientation = [0, 0]
     red_ghost.position = [11, 13]
@@ -105,7 +107,8 @@ while True:
     if pacman.number_of_eaten_dots == board.number_of_dots:
         NewLevel()
     board.time_of_game += 1
+    blue_ghost.time_of_dead += 1
     pygame.display.flip()
-    clock.tick(10)
+    clock.tick(3)
 
 

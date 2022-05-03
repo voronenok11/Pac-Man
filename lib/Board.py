@@ -3,6 +3,7 @@ class Board:
     level = 0
     number_of_dots = 0
     time_of_game = 0
+    time_of_level = 0
     row = 31
     column = 28
     def Fill(self):
