@@ -66,7 +66,8 @@ class Board:
             self.board[i][6] = '*'
             self.board[i][12] = '.'
             self.board[i][15] = '.'
-            self.board[i][21] = '.'
+            self.board[i][21] = '*'
+
         #row 11 and 12 and 13
         for j in range(11, 14):
             for i in range(6):
@@ -150,7 +151,6 @@ class Board:
         self.board[26][14] = '#'
         self.board[26][19] = '#'
         self.board[26][20] = '#'
-        self.board[26][21] = '#'
         self.board[26][-1] = '#'
         #row 27-28
         for i in range(27, 29):
@@ -168,12 +168,3 @@ class Board:
         #row 30
         for i in range(self.column):
             self.board[30][i] = '#'
-    def NewLevel(self):
-        self.Fill()
-        self.level += 1
-        self.number_of_dots = 0
-        for i in range(self.row):
-            for j in range(self.column):
-                if self.board[i][j] == '*':
-                    self.number_of_dots += 1
-
