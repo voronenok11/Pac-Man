@@ -22,6 +22,27 @@ def DrawBoard():
     pygame.draw.circle(screen, (255, 160, 122), (yellow_ghost.position[1] * 40 + 20, yellow_ghost.position[0] * 40 + 20), 10, 0)
     pygame.draw.circle(screen, (255, 105, 180), (pink_ghost.position[1] * 40 + 20, pink_ghost.position[0] * 40 + 20), 10, 0)
     pygame.draw.circle(screen, (255, 255, 0), (pacman.position[1] * 40 + 20, pacman.position[0] * 40 + 20), 10, 0)
+    now_points = ""
+    x = pacman.points
+    for i in range(6):
+        now_points = chr(ord('0') + x % 10) + now_points
+        x //= 10
+    screen.blit(my_font.render("Cчёт: " + now_points, True, (255, 255, 255)), (1200, 200))
+    now_level = ""
+    x = board.level
+    while x > 0:
+        now_level = chr(ord('0') + x % 10) + now_level
+        x //= 10
+    screen.blit(my_font.render("Уровень: " + now_level, True, (255, 255, 255)), (1200, 280))
+def Draw_end_game():
+    pygame.draw.rect(screen, (0, 0, 0), pygame.Rect(0, 0, 1600, 1300), 0)
+    now_points = ""
+    x = pacman.points
+    while x > 0:
+        now_points = chr(ord('0') + x % 10) + now_points
+        x //= 10
+    screen.blit(my_font.render("Вы проиграли", True, (255, 255, 255)), (650, 550))
+    screen.blit(my_font.render("Ваш счёт: " + now_points, True, (255, 255, 255)), (650, 600))
 def NewLevel():
     board.Fill()
     board.level += 1
@@ -46,6 +67,7 @@ def NewLevel():
 def ResetLevel():
     pacman.health -= 1
     blue_ghost.time_of_dead = 0
+    yellow_ghost.time_of_dead = 0
     pacman.position = [23, 13]
     pacman.orientation = [0, 0]
     red_ghost.position = [11, 13]
@@ -65,13 +87,14 @@ pacman = Pacman()
 NewLevel()
 pygame.init()
 screen = pygame.display.set_mode((1600, 1300))
+my_font = pygame.font.SysFont('arial', 60)
 clock = pygame.time.Clock()
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
-        elif event.type == pygame.KEYDOWN:
+        if event.type == pygame.KEYDOWN:
             prev_orientation = pacman.orientation
             change_orientation = False
             if event.key == pygame.K_LEFT and pacman.orientation != [0, 1]:
@@ -89,28 +112,28 @@ while True:
             if change_orientation and (board.board[pacman.position[0] + pacman.orientation[0]][pacman.position[1] + pacman.orientation[1]] == '#' or [pacman.position[0] + pacman.orientation[0], pacman.position[1] + pacman.orientation[1]] == [12, 13] or [pacman.position[0] + pacman.orientation[0], pacman.position[1] + pacman.orientation[1]] == [12, 14]):
 
                 pacman.orientation = prev_orientation
-    was_caught = False
-    if pacman.Move(board, red_ghost, blue_ghost, pink_ghost, yellow_ghost):
-        was_caught = True
-    if red_ghost.Move(board, pacman):
-        was_caught = True
-    if blue_ghost.Move(board, pacman, red_ghost):
-        was_caught = True
-    if pink_ghost.Move(board, pacman):
-        was_caught = True
-    if yellow_ghost.Move(board, pacman):
-        was_caught = True
-    DrawBoard()
-    if was_caught:
-        ResetLevel()
-    if pacman.health == 0:
-        break
-    if pacman.number_of_eaten_dots == board.number_of_dots:
-        NewLevel()
-    board.time_of_game += 1
-    blue_ghost.time_of_dead += 1
-    yellow_ghost.time_of_dead += 1
+    if pacman.health != 0:
+        was_caught = False
+        if pacman.Move(board, red_ghost, blue_ghost, pink_ghost, yellow_ghost):
+            was_caught = True
+        if red_ghost.Move(board, pacman):
+            was_caught = True
+        if blue_ghost.Move(board, pacman, red_ghost):
+            was_caught = True
+        if pink_ghost.Move(board, pacman):
+            was_caught = True
+        if yellow_ghost.Move(board, pacman):
+            was_caught = True
+        DrawBoard()
+        if was_caught:
+            ResetLevel()
+        if pacman.health != 0:
+            if pacman.number_of_eaten_dots == board.number_of_dots:
+                NewLevel()
+            board.time_of_game += 1
+            blue_ghost.time_of_dead += 1
+            yellow_ghost.time_of_dead += 1
+    else:
+        Draw_end_game()
     pygame.display.flip()
     clock.tick(3)
-
-
